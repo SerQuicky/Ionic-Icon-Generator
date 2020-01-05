@@ -11,6 +11,7 @@ const type = parameters[1];
 const ending = parameters[2] !== undefined ? parameters[2] : "png";
 const platform = parameters[3];
 
+
 // Android and Ios icon/splash sizes and names
 // --------------------------------------------------------------
 
@@ -92,12 +93,13 @@ const iosElementsSplash = [
 
 // executed functions for the generation
 // --------------------------------------------------------------
-
+console.log(fs.existsSync('./resources/android/icon/drawable-hdpi-icon.png'));
 if(image !== undefined && type !== undefined) {
   generateDirectories();
-  evaluatePlatform(platform);
+  evaluatePlatform(image, type, ending, platform);
 } else {
-  throw "Error: The base-image or the generation-type is undefined!";
+  console.log("Warning: The base-image or the generation-type is undefined!");
+  console.log("Info: If you are running a test, everything is fine.")
 }
 
 
@@ -125,42 +127,47 @@ function createDirectory(path) {
 // evaluate the platform parameter and create the images
 // -------------------------------------------------------------------------
 
-function evaluatePlatform(platform) {
+function evaluatePlatform(image, type, ending, platform) {
   switch(platform){
     case undefined:
-      generateAndroidElements('./resources/android/');
-      generateIOSElements('./resources/ios/');
+      generateAndroidElements('./resources/android/', image, type, ending);
+      generateIOSElements('./resources/ios/', image, type, ending);
       break;
     case "android":
-      generateAndroidElements('./resources/android/');
+      generateAndroidElements('./resources/android/', image, type, ending);
       break;
     case "ios":
-      generateIOSElements('./resources/ios/');
+      generateIOSElements('./resources/ios/', image, type, ending);
       break; 
     default:
         throw "Error: Unexpected platform was defined, to build both ios and android let the parameter empty!";
   }
 }
 
+module.exports = {
+  generateDirectories: generateDirectories,
+  evaluatePlatform: evaluatePlatform
+}
 
 // image generation
 // -------------------------------------------------------------------------
 
-function generateAndroidElements(path) {
-  genericGeneration(androidElementsIcons, androidElementsSplash, path);
+function generateAndroidElements(path, image, type, ending) {
+  genericGeneration(androidElementsIcons, androidElementsSplash, path, image, type, ending);
 }
 
-function generateIOSElements(path) {
-  genericGeneration(iosElementsIcons, iosElementsSplash, path);
+function generateIOSElements(path, image, type, ending) {
+  genericGeneration(iosElementsIcons, iosElementsSplash, path, image, type, ending);
 }
 
-function genericGeneration(iconList, splashList, path) {
+function genericGeneration(iconList, splashList, path, image, type, ending) {
   const arry = type === "icon" ? iconList : splashList;
   path += type === "icon" ? "icon/" : "splash/";
   arry.forEach(el => generateImage(image, path, el.name, el.width, el.height, ending));
 }
 
 function generateImage(baseImage, path, name, width, height, ending){
+  console.log(path + name + '.' + ending);
   sharp(baseImage)
   .resize(width, height)
   .toBuffer()
