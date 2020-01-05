@@ -168,6 +168,6 @@ function generateImage(baseImage, path, name, width, height, ending){
   return sharp(baseImage)
   .resize(width, height)
   .toBuffer()
-  .then( data => { sharp(data).toFile(path + name + '.' + ending, (err, info) => {})})
+  .then( data => { sharp(data).toFile(path + name + '.' + ending, (err, info) => { console.log("File generated: " + path + name + '.' + ending)})})
   .catch( err => { console.log(err) });
 }
