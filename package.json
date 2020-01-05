@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-cmd": "^3.0.0",
+    "rimraf": "^3.0.0",
     "sharp": "^0.23.3"
   },
   "devDependencies": {

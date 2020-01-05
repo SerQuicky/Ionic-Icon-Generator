@@ -93,9 +93,8 @@ const iosElementsSplash = [
 
 // executed functions for the generation
 // --------------------------------------------------------------
-console.log(fs.existsSync('./resources/android/icon/drawable-hdpi-icon.png'));
 if(image !== undefined && type !== undefined) {
-  generateDirectories();
+  generateDirectories("resources");
   evaluatePlatform(image, type, ending, platform);
 } else {
   console.log("Warning: The base-image or the generation-type is undefined!");
@@ -108,14 +107,14 @@ if(image !== undefined && type !== undefined) {
 
 // generate the directory structure (resources/[platform]/icon&splash)
 // -------------------------------------------------------------------------
-function generateDirectories() {
-  createDirectory('./resources');
-  createDirectory('./resources/android');
-  createDirectory('./resources/ios');
-  createDirectory('./resources/android/icon');
-  createDirectory('./resources/android/splash');
-  createDirectory('./resources/ios/icon');
-  createDirectory('./resources/ios/splash');
+function generateDirectories(name) {
+  createDirectory('./' + name);
+  createDirectory('./' + name + '/android');
+  createDirectory('./' + name + '/ios');
+  createDirectory('./' + name + '/android/icon');
+  createDirectory('./' + name + '/android/splash');
+  createDirectory('./' + name + '/ios/icon');
+  createDirectory('./' + name + '/ios/splash');
 }
 
 function createDirectory(path) {
@@ -146,7 +145,6 @@ function evaluatePlatform(image, type, ending, platform) {
 
 module.exports = {
   generateDirectories: generateDirectories,
-  evaluatePlatform: evaluatePlatform
 }
 
 // image generation
@@ -167,10 +165,9 @@ function genericGeneration(iconList, splashList, path, image, type, ending) {
 }
 
 function generateImage(baseImage, path, name, width, height, ending){
-  console.log(path + name + '.' + ending);
-  sharp(baseImage)
+  return sharp(baseImage)
   .resize(width, height)
   .toBuffer()
-  .then( data => { sharp(data).toFile(path + name + '.' + ending, (err, info) => { console.log("File generated: " + path + name + '.' + ending)})})
+  .then( data => { sharp(data).toFile(path + name + '.' + ending, (err, info) => {})})
   .catch( err => { console.log(err) });
 }
